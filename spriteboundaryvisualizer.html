@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Sprite Visualizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        #drop-area {
+            width: 50%;
+            height: 75vh;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        canvas {
+            border: 1px solid black;
+            display: none;
+        }
+
+        textarea {
+            width: 50%;
+            height: 75vh;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Drag & Drop an Image + Edit Sprite Data</h2>
+    <div id="container">
+        <div id="drop-area">
+            <p>Drop an image here</p>
+            <canvas id="canvas"></canvas>
+        </div>
+        <textarea style="white-space: nowrap;" id="sprite-data" placeholder="Enter structured sprite data here..." oninput="updateSprites()"></textarea>
+    </div>
+
+    <script>
+        const dropArea = document.getElementById("drop-area");
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const spriteInput = document.getElementById("sprite-data");
+        let textureImage = null;
+
+        dropArea.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            dropArea.style.borderColor = "blue";
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.style.borderColor = "#ccc";
+        });
+
+        dropArea.addEventListener("drop", (event) => {
+            event.preventDefault();
+            dropArea.style.borderColor = "#ccc";
+            
+            const file = event.dataTransfer.files[0];
+            if (file && file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    textureImage = new Image();
+                    textureImage.src = e.target.result;
+                    canvas.width = textureImage.width;  // Set canvas width to match image
+                    canvas.height = textureImage.height; // Set canvas height to match image
+                    dropArea.innerHTML = "";
+                    dropArea.appendChild(canvas);
+                    canvas.style.display = "block";
+                    updateCanvas();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert("Please drop a valid image file.");
+            }
+        });
+
+        function updateSprites() {
+            updateCanvas();
+        }
+
+        function parseSpriteData() {
+            const text = spriteInput.value;
+            const spriteRegex = /(?:^[\wæøåÆØÅ\"\s\d\n]+\{[\wæøåÆØÅ\"\s\d\n]+\{[\wæøåÆØÅ\"\s\d\n]+)?\s([\wæøåÆØÅ\"\d]+)\s*\{\s*[^}]*?sprite\"?\s*"(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/g;
+            let sprites = [];
+            let match;
+
+            while ((match = spriteRegex.exec(text)) !== null) {
+                const [_, name, x, y, w, h, imgSize] = match;
+                sprites.push({
+                    name,
+                    sprite: [parseInt(x), parseInt(y), parseInt(w), parseInt(h), parseInt(imgSize)]
+                });
+            }
+
+            return sprites;
+        }
+
+        function updateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (textureImage) {
+                ctx.drawImage(textureImage, 0, 0, canvas.width, canvas.height);
+            }
+
+            const sprites = parseSpriteData();
+
+            sprites.forEach(({ name, sprite }) => {
+                const [x, y, w, h, imgSize] = sprite;
+                
+                const scale = canvas.width / imgSize;
+                const sx = x * scale;
+                const sy = y * scale;
+                const sw = w * scale;
+                const sh = h * scale;
+
+                ctx.strokeStyle = "red";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(sx, sy, sw, sh);
+
+                ctx.fillStyle = "red";
+                ctx.font = "12px Arial";
+                ctx.fillText(name, sx + 5, sy + 15);
+            });
+        }
+
+        // Pre-fill example sprite data
+        spriteInput.value = `custom_forest_floor_01
+{
+    density 1600
+    GrassTex
+    {
+        alpha 0
+        RoseFlower
+        {
+            sprite "0 0 83 128 512"
+            spritesize "0.5 0.05 7 13"
+        }
+        FernShrub
+        {
+            sprite "120 0 136 256 512"
+            spritesize "0.5 0.05 17 28"
+        }
+        GrassTuft
+        {
+            sprite "0 199 120 57 512"
+            spritesize "0.5 0 20 10"
+        }
+        PinkFlower
+        {
+            sprite "83 0 38 128 512"
+            spritesize "0.5 0 6 18"
+        }
+        LushShrub
+        {
+            sprite "256 128 172 128 512"
+            spritesize "0.5 0 32 21"
+        }
+    }
+}`;
+
+        updateCanvas();
+    </script>
+</body>
+</html>
