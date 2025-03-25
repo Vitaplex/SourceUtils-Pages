@@ -1,6 +1,6 @@
 # SourceDetailSpriteViewer
-Source Engine; Visualize position of detail sprites on images for detail props 
-Drag and Drop an image onto the left pane (Must be a .png or .jpeg, use [VTFEdit](https://nemstools.github.io/pages/VTFLib-Download.html) to export Textures)
+Source Engine; Visualize position of detail sprites on images for detail props   
+Drag and Drop an image onto the left pane (Must be a .png or .jpeg, use [VTFEdit](https://nemstools.github.io/pages/VTFLib-Download.html) to export Textures)  
 In the the right pane, the `sprite`-fields on each sprite part will be used to overlay a grid showing where the textures will be.
 
 ## Example detail.vbsp snippet
