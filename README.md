@@ -11,7 +11,7 @@ In the the right pane, the `sprite`-fields on each sprite part will be used to o
 </details>
 
 
-## 🖼 [Sprite detail viewer and editor](/spriteboundaryvisualizer.html)
+## 🖼 [Sprite detail viewer and editor](https://github.com/Vitaplex/SourceUtils-Pages/spriteboundaryvisualizer.html)
 Visualize position of detail sprites on images for detail props   
 Drag and Drop an image onto the left pane (Must be a .png or .jpeg, [VTFEdit](https://nemstools.github.io/pages/VTFLib-Download.html) can be used to export Textures)  
 In the the right pane, the `sprite`-fields on each sprite part will be used to overlay a grid showing where the textures will be.
