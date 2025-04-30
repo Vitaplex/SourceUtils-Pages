@@ -6,10 +6,10 @@ Meshes are also foolhardily editable by hand in the text area, if you're so incl
   <summary><strong>How to use</strong></summary>
     <h3>Basic usage</h3>
     <li>Drag & Drop files from your computer onto the page to view them </li>
-    <li>You can select multiple files from your computer and drag them all onto the page to open several meshes at the same time. They will appear as one collective mesh</li>
+    <li>Select multiple files from your computer and drag them all onto the page to open several .smd's at the same time! They will appear as one collective mesh.</li>
     <ul><li>Note that uploading alot of complex mesh data will slow down your browser</li></ul>
-    <li>Gaze at your model, edit it or copy the value of <code>$bbox</code> (probably the only useful thing here). $bbox will take into account the size of all your meshes, if you uploaded multiple </li>
-    <p>When a mesh is uploaded, it wil appear as a green, untextured version of your mesh. The yellow wireframe box around it is the models calculated bounding box. This will be displayed in the top-right section of your screen</p>
+    <li>Gaze at your model, edit it or copy the value of <code>$bbox</code> (probably the only useful thing here). <code>$bbox</code> will take into account the size of all your meshes multiple .smd files were opened </li>
+    <p>When a .smd is opened, it wil appear as a green, untextured version of your mesh. The yellow wireframe box around it is the models calculated bounding box (<code>$bbox</code>). This will be displayed in the top-right section of your screen</p>
     <h3>3D View Controls</h3>
     <li> <strong>Left-click + drag:</strong> Rotate view</li>
     <li> <strong>Right-click + drag:</strong> Pan view</li>
@@ -31,7 +31,7 @@ triangles
   0     1    -1     2     0     0     1     0     0
     </pre>
 </details>
-
+<img src="media/smdviewer.jpg">
 
 ## 🖼 [Sprite detail viewer and editor](https://vitaplex.github.io/SourceUtils-Pages/spriteboundaryvisualizer.html)
 Visualize position of detail sprites on images for detail props   
