@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,17 +40,40 @@
             border: 1px solid #ccc;
             resize: none;
         }
+
+        .home-button {
+            display: inline-block;
+            margin: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #574a83;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            transition: background-color 0.2s ease;
+        }
+
+        .home-button:hover {
+            background-color: #8470c7;
+        }
+
     </style>
 </head>
+
 <body>
     <h2>Drag & Drop an Image + Edit Sprite Data</h2>
-    <a style="background-color: #ccc;" href="../"> ◀ Back to Main page</a>
+    <a class="home-button" href="https://vitaplex.github.io/SourceUtils-Pages">
+        ◀ Back to Main Page
+    </a>
+
     <div id="container">
         <div id="drop-area">
             <p>Drop an image here</p>
             <canvas id="canvas"></canvas>
         </div>
-        <textarea style="white-space: nowrap;" id="sprite-data" placeholder="Enter structured sprite data here..." oninput="updateSprites()"></textarea>
+        <textarea style="white-space: nowrap;" id="sprite-data" placeholder="Enter structured sprite data here..."
+            oninput="updateSprites()"></textarea>
     </div>
 
     <script>
@@ -71,19 +95,21 @@
         dropArea.addEventListener("drop", (event) => {
             event.preventDefault();
             dropArea.style.borderColor = "#ccc";
-            
+
             const file = event.dataTransfer.files[0];
             if (file && file.type.startsWith("image/")) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     textureImage = new Image();
+                    textureImage.onload = () => {
+                        canvas.width = textureImage.width;
+                        canvas.height = textureImage.height;
+                        dropArea.innerHTML = "";
+                        dropArea.appendChild(canvas);
+                        canvas.style.display = "block";
+                        updateCanvas();
+                    };
                     textureImage.src = e.target.result;
-                    canvas.width = textureImage.width;  // Set canvas width to match image
-                    canvas.height = textureImage.height; // Set canvas height to match image
-                    dropArea.innerHTML = "";
-                    dropArea.appendChild(canvas);
-                    canvas.style.display = "block";
-                    updateCanvas();
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -114,7 +140,7 @@
 
         function updateCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             if (textureImage) {
                 ctx.drawImage(textureImage, 0, 0, canvas.width, canvas.height);
             }
@@ -123,7 +149,7 @@
 
             sprites.forEach(({ name, sprite }) => {
                 const [x, y, w, h, imgSize] = sprite;
-                
+
                 const scale = canvas.width / imgSize;
                 const sx = x * scale;
                 const sy = y * scale;
@@ -178,4 +204,5 @@
         updateCanvas();
     </script>
 </body>
+
 </html>
