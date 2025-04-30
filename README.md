@@ -1,5 +1,4 @@
-# Source Utils - GitHub Pages
-
+Below are some useful tools for developing custom assets in the Source engine
 ## 🖼 [.SMD viewer (calculates a models $bbox)](https://vitaplex.github.io/SourceUtils-Pages/smdviewer.html)
 Drag and drop **.smd** files to view them in a **3D viewer**. Automatically calculates and displays the models `$bbox` for use in **.qc** files!
 Meshes are also foolhardily editable by hand in the text area, if you're so inclined...
