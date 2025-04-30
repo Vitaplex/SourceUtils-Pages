@@ -15,6 +15,7 @@ Meshes are also foolhardily editable by hand in the text area, if you're so incl
     <li> <strong>Right-click + drag:</strong> Pan view</li>
     <li> <strong>Scroll:</strong> Zoom</li>
     <li> <strong>Mouse3 + Pan up/down:</strong> Zoom in/out fast</li>
+    <img src="media/smdviewer.jpg">
 </details>
 <details>
   <summary><strong>.SMD format</strong></summary>
@@ -30,7 +31,6 @@ triangles
   0    -1    -1     2     0     0     1     0     0
   0     1    -1     2     0     0     1     0     0
     </pre>
-    <img src="media/smdviewer.jpg">
 </details>
 
 ## 🖼 [Sprite detail viewer and editor](https://vitaplex.github.io/SourceUtils-Pages/spriteboundaryvisualizer.html)
