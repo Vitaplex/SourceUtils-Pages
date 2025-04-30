@@ -16,6 +16,21 @@ Meshes are also foolhardily editable by hand in the text area, if you're so incl
     <li> <strong>Scroll:</strong> Zoom</li>
     <li> <strong>Mouse3 + Pan up/down:</strong> Zoom in/out fast</li>
 </details>
+<details>
+  <summary><h2>.SMD format</h2></summary>
+    <p>The second, third and fourth number in each line is the XYZ position of a single vertex. Modifying these values will manipulate the mesh on the screen</p>
+    <a target="_blank" href="https://developer.valvesoftware.com/wiki/SMD#Triangles">SMD format - Valve Developer Community</a>
+    <h3>About</h3>
+    <pre>0 [PosX] [PosY] [PosZ] [NormX] [NormY] [NormZ] [U] [V] [links] [Bone ID] [Weight] [...</pre>
+    <h3>Example</h3>
+    <pre>
+triangles
+  Material
+  0     1     1     2     0     1     0     0     0
+  0    -1    -1     2     0     0     1     0     0
+  0     1    -1     2     0     0     1     0     0
+    </pre>
+</details>
 
 
 ## 🖼 [Sprite detail viewer and editor](https://vitaplex.github.io/SourceUtils-Pages/spriteboundaryvisualizer.html)
