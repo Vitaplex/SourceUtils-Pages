@@ -30,8 +30,8 @@ triangles
   0    -1    -1     2     0     0     1     0     0
   0     1    -1     2     0     0     1     0     0
     </pre>
+    <img src="media/smdviewer.jpg">
 </details>
-<img src="media/smdviewer.jpg">
 
 ## 🖼 [Sprite detail viewer and editor](https://vitaplex.github.io/SourceUtils-Pages/spriteboundaryvisualizer.html)
 Visualize position of detail sprites on images for detail props   
