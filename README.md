@@ -15,6 +15,7 @@ Meshes are also foolhardily editable by hand in the text area, if you're so incl
     <li> <strong>Right-click + drag:</strong> Pan view</li>
     <li> <strong>Scroll:</strong> Zoom</li>
     <li> <strong>Mouse3 + Pan up/down:</strong> Zoom in/out fast</li>
+    <h3>Gameplay</h3>
     <img src="media/smdviewer.jpg">
 </details>
 <details>
