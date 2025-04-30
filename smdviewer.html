@@ -58,13 +58,31 @@
         *::after {
             box-sizing: border-box;
         }
+        .home-button {
+            display: inline-block;
+            margin: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #574a83;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            transition: background-color 0.2s ease;
+        }
+
+        .home-button:hover {
+            background-color: #8470c7;
+        }
+
     </style>
 </head>
 
 <body style="margin:0; padding:0; display: flex; height: 100vh;">
     <!-- Left side: Text area -->
+    
     <div id="drop-zone" style="width: 50%; height: 100%; box-sizing: border-box; padding: 10px;">
-        <a style="background-color: #ccc;" href="../"> ◀ Back to Main page</a>
+        <a class="home-button" href="https://vitaplex.github.io/SourceUtils-Pages"> ◀ Back to Main page</a>
         <textarea id="smd-data" placeholder="Enter .smd data or drag a file here" oninput="updateSmdInput()"
             style="width: 100%; height: 100%; box-sizing: border-box; resize: none; white-space: nowrap;"></textarea>
     </div>
