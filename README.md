@@ -3,7 +3,7 @@ Below are some useful tools for developing custom assets in the Source engine
 Drag and drop **.smd** files to view them in a **3D viewer**. Automatically calculates and displays the models `$bbox` for use in **.qc** files!
 Meshes are also foolhardily editable by hand in the text area, if you're so inclined...
 <details>
-  <summary><h2>How to use</h2></summary>
+  <summary><strong>How to use</strong></summary>
     <h3>Basic usage</h3>
     <li>Drag & Drop files from your computer onto the page to view them </li>
     <li>You can select multiple files from your computer and drag them all onto the page to open several meshes at the same time. They will appear as one collective mesh</li>
@@ -17,7 +17,7 @@ Meshes are also foolhardily editable by hand in the text area, if you're so incl
     <li> <strong>Mouse3 + Pan up/down:</strong> Zoom in/out fast</li>
 </details>
 <details>
-  <summary><h2>.SMD format</h2></summary>
+  <summary><strong>.SMD format</strong></summary>
     <p>The second, third and fourth number in each line is the XYZ position of a single vertex. Modifying these values will manipulate the mesh on the screen</p>
     <a target="_blank" href="https://developer.valvesoftware.com/wiki/SMD#Triangles">SMD format - Valve Developer Community</a>
     <h3>About</h3>
@@ -39,7 +39,7 @@ Drag and Drop an image onto the left pane (Must be a .png or .jpeg, [VTFEdit](ht
 In the the right pane, the `sprite`-fields on each sprite part will be used to overlay a grid showing where the textures will be.
 
 <details>
-  <summary><h2>Example detail.vbsp snippet</h2></summary>
+  <summary><strong>Example detail.vbsp snippet</strong></summary>
   <pre>custom_forest_floor_01
 {
     density 1600
