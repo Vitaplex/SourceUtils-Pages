@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SMD Viewer</title>
+    <style>
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2rem;
+            z-index: 1000;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            width: 50vw;
+        }
+
+        #drop-area {
+            width: 50%;
+            height: 75vh;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        canvas {
+            border: 1px solid black;
+            display: none;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body style="margin:0; padding:0; display: flex; height: 100vh;">
+    <!-- Left side: Text area -->
+    <div id="drop-zone" style="width: 50%; height: 100%; box-sizing: border-box; padding: 10px;">
+        <textarea id="smd-data" placeholder="Enter .smd data or drag a file here" oninput="updateSmdInput()"
+            style="width: 100%; height: 100%; box-sizing: border-box; resize: none; white-space: nowrap;"></textarea>
+    </div>
+
+    <!-- Right side: 3D Canvas container -->
+    <div id="container" style="width: 50%; height: 100%;"></div>
+
+    <!-- TextArea ⚠ Drop Zone ⚠ -->
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const textarea = document.getElementById('smd-data');
+
+        dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            textarea.style.backgroundColor = 'grey';
+            dropZone.style.backgroundColor = '#00f';
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+            textarea.style.backgroundColor = 'white';
+            dropZone.style.backgroundColor = 'white';
+        });
+
+        dropZone.addEventListener("drop", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            textarea.style.backgroundColor = 'white';
+            dropZone.style.backgroundColor = 'white';
+
+            const files = e.dataTransfer.files;
+            let validFiles = true;
+            let filesProcessed = 0;
+                        
+            textarea.value = "";
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                if (file && file.name.endsWith('.smd')) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        textarea.value += "\n" + event.target.result;
+
+                        filesProcessed++;
+
+                        if (filesProcessed === files.length) {
+                            updateSmdInput();
+                        }
+                    };
+                    reader.readAsText(file);
+                } else {
+                    validFiles = false;
+                }
+            }
+
+            if (!validFiles) {
+                alert('Please drop only valid .smd files.');
+            }
+        });
+    </script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.138.0/build/three.module.js",
+                "OrbitControls": "https://unpkg.com/three@0.138.0/examples/jsm/controls/OrbitControls.js"
+            }
+        }
+    </script>
+
+    <!-- THREEJS initialization stuff -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'OrbitControls';
+
+        let scene, camera, renderer, mesh;
+
+        threeJsInit();
+
+        function threeJsInit() {
+            const container = document.getElementById("container");
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 5000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(container.clientWidth, container.clientHeight - 50);
+            container.appendChild(renderer.domElement);
+
+            camera.updateProjectionMatrix();
+
+            window.addEventListener("resize", () => {
+                const width = container.clientWidth;
+                const height = container.clientHeight - 50;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            });
+
+
+            // Create geometry with vertices and indices
+            const vertices = [];
+
+            const geometry = new THREE.BufferGeometry();
+            const verticesArray = new Float32Array(vertices);
+            geometry.setAttribute('position', new THREE.BufferAttribute(verticesArray, 3));
+
+
+            const axesHelper = new THREE.AxesHelper(5);
+
+            // Rotate to conform to Source engine's coordinate system
+            axesHelper.rotation.x = -Math.PI / 2;
+
+            scene.add(axesHelper);
+
+
+            const ambientLight = new THREE.AmbientLight(0x404040); // Soft light
+            scene.add(ambientLight);
+
+            // Add directional light to cast shadows
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 5, 5); // Position the light source
+            directionalLight.castShadow = true; // Enable shadows from this light
+            scene.add(directionalLight);
+
+            // Adjust light properties for more realistic shadows
+            directionalLight.shadow.mapSize.width = 1024;  // Higher values give better shadows
+            directionalLight.shadow.mapSize.height = 1024;
+            directionalLight.shadow.camera.near = 0.1;
+            directionalLight.shadow.camera.far = 10;
+
+
+            camera.position.z = 4;
+
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            renderer.setAnimationLoop(animate);
+            function animate() {
+
+                controls.update();
+                renderer.render(scene, camera);
+            }
+
+        }
+
+        window.updateSmdInput = function () {
+            const inputText = document.getElementById("smd-data").value.trim();
+            if (!inputText) return;
+
+            // Split input by newlines
+            const lines = inputText.split('\n');
+
+            // Initialize an empty Float32Array with a reasonable initial size (for example, 1000)
+            let vertexdata = new Float32Array(1000);
+            let index = 0;
+            let inTriangles = false;
+
+            lines.forEach(line => {
+
+                if (line.trim() === "triangles") inTriangles = true;
+
+                if (!inTriangles) return;
+
+                if (line.trim() === "end") {
+                    inTriangles = false; return
+                }
+
+                const parts = line.trim().split(/\s+/);
+
+                if (parts.length !== 1 && !isNaN(parts[0])) {
+                    const x = parseFloat(parts[1]);
+                    const y = parseFloat(parts[2]);
+                    const z = parseFloat(parts[3]);
+
+                    if (index + 3 > vertexdata.length) {
+                        const newVertexData = new Float32Array(vertexdata.length * 2);
+                        newVertexData.set(vertexdata);
+                        vertexdata = newVertexData;
+                    }
+
+                    vertexdata[index++] = x;
+                    vertexdata[index++] = y;
+                    vertexdata[index++] = z;
+                }
+            });
+
+            vertexdata = vertexdata.slice(0, index); // Resize to the actual data length
+
+            // Remove old mesh
+            if (mesh) {
+                scene.remove(mesh);
+                mesh.geometry.dispose();
+                mesh.material.dispose();
+            }
+
+
+            const geometry = new THREE.BufferGeometry();
+            const vertices = new Float32Array(vertexdata);
+            geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+            geometry.computeVertexNormals(); // for lighting
+
+            const material = new THREE.MeshStandardMaterial({ color: 0x00ff99, side: THREE.DoubleSide });
+            mesh = new THREE.Mesh(geometry, material);
+
+            // Rotate to conform to Source engine's coordinate system
+            mesh.rotation.x = -Math.PI / 2;
+
+            scene.add(mesh);
+
+            const bbox = new THREE.Box3().setFromObject(mesh);
+
+            if (window.bboxHelper) {
+                scene.remove(window.bboxHelper);
+            }
+
+            window.bboxHelper = new THREE.BoxHelper(mesh, 0xffff00);
+
+            // Rotate to conform to Source engine's coordinate system
+            window.bboxHelper.rotation.x = -Math.PI / 2;
+
+
+            scene.add(window.bboxHelper);
+
+            // Get min and max corners
+            const min = bbox.min;
+            const max = bbox.max;
+
+            // Format as QC $bbox
+            const bboxString = `$bbox ${min.x.toFixed(6)} ${min.y.toFixed(6)} ${min.z.toFixed(6)} ${max.x.toFixed(6)} ${max.y.toFixed(6)} ${max.z.toFixed(6)}`;
+
+            // Display on screen
+            let bboxDisplay = document.getElementById('bbox-display');
+            if (!bboxDisplay) {
+                bboxDisplay = document.createElement('pre');
+                bboxDisplay.id = 'bbox-display';
+                bboxDisplay.style.position = 'absolute';
+                bboxDisplay.style.top = '10px';
+                bboxDisplay.style.right = '10px';
+                bboxDisplay.style.padding = '5px 10px';
+                bboxDisplay.style.background = 'rgba(0,0,0,0.6)';
+                bboxDisplay.style.color = 'lime';
+                bboxDisplay.style.zIndex = 10;
+                document.body.appendChild(bboxDisplay);
+            }
+            bboxDisplay.textContent = bboxString;
+
+
+        }
+
+    </script>
+</body>
+
+</html>
