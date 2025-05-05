@@ -201,7 +201,7 @@ end</textarea>
                 if (file && file.name.endsWith('.smd')) {
                     const reader = new FileReader();
                     reader.onload = function (event) {
-                        if (event.target.result.startsWith("version")) {
+                        if (event.target.result.includes("version")) {
                             textarea.value += "\n" + event.target.result;
                         }
                         else {
