@@ -369,12 +369,18 @@ end</textarea>
             const material = new THREE.MeshStandardMaterial({ color: 0x00ff99, side: THREE.DoubleSide });
             mesh = new THREE.Mesh(geometry, material);
 
+            
+            scene.add(mesh);
+            
+            const bbox = new THREE.Box3().setFromObject(mesh);
+            const min = bbox.min;
+            const max = bbox.max;
+            
+            // Format as QC $bbox
+            const bboxString = `$bbox ${min.x.toFixed(6)} ${min.y.toFixed(6)} ${min.z.toFixed(6)} ${max.x.toFixed(6)} ${max.y.toFixed(6)} ${max.z.toFixed(6)}`;
+
             // Rotate to conform to Source engine's coordinate system
             mesh.rotation.x = -Math.PI / 2;
-
-            scene.add(mesh);
-
-            const bbox = new THREE.Box3().setFromObject(mesh);
 
             if (window.bboxHelper) {
                 scene.remove(window.bboxHelper);
@@ -382,18 +388,9 @@ end</textarea>
 
             window.bboxHelper = new THREE.BoxHelper(mesh, 0xffff00);
 
-            // Rotate to conform to Source engine's coordinate system
-            window.bboxHelper.rotation.x = -Math.PI / 2;
-
-
             scene.add(window.bboxHelper);
 
-            // Get min and max corners
-            const min = bbox.min;
-            const max = bbox.max;
 
-            // Format as QC $bbox
-            const bboxString = `$bbox ${min.x.toFixed(6)} ${min.y.toFixed(6)} ${min.z.toFixed(6)} ${max.x.toFixed(6)} ${max.y.toFixed(6)} ${max.z.toFixed(6)}`;
 
             // Display on screen
             let bboxDisplay = document.getElementById('bbox-display');
